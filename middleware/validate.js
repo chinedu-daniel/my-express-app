@@ -14,18 +14,22 @@ function validate(schema) {
                 );
             }
 
-            if (rules.minLength && body[field].length < rules.minLength) {
+            if (rules.email && !body[field].includes("@")) {
+                errors.push(`${field} must be a valid email`);
+            }
+
+            if (rules.minLength && body[field]?.length < rules.minLength) {
                 errors.push(
                     `${field} must be at least ${rules.minLength} characters`
                 );
             }
+        }
 
-            if (errors.length > 0) {
-                return res.status(400).json({
-                    success: false,
-                    errors
-                });
-            }
+        if (errors.length > 0) {
+            return res.status(400).json({
+                success: false,
+                errors
+            });
         }
 
         next();

@@ -3,9 +3,10 @@ const router = express.Router();
 
 const { validate } = require("../middleware/validate");
 const registerUser = require("../controllers/authController");
+const { registerSchema } = require("../validators/authSchema");
 
 router.post("/register",
-    validate["username", "email", "password"],
+    validate(registerSchema),
     registerUser
 );
 

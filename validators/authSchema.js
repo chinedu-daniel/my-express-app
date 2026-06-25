@@ -4,7 +4,8 @@ const registerSchema = {
     },
 
     email: {
-        required: true
+        required: true,
+        email: true
     },
 
     password: {
