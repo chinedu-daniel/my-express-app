@@ -7,9 +7,7 @@ async function register(userData) {
         throw new Error("Email already exists");
     }
 
-    const user = await userRepository.create(userData);
-
-    return user;
+    return await userRepository.create(userData);
 }
 
 module.exports = {
