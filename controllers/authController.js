@@ -1,6 +1,6 @@
 const userService = require("../services/user.services");
 
-function registerUser(req, res) {
+async function registerUser(req, res) {
     console.log("Controller starts here");
 
     const user = await userService.register(req.body);
