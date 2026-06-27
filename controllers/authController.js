@@ -1,7 +1,13 @@
-async function registerUser(req, res) {
-    res.status(201).json({
-        message: "User registered"
-    });
+const userService = require("../services/user.services");
+
+function registerUser(req, res) {
+    console.log("Controller starts here");
+
+    const user = userService.register(req.body);
+
+    console.log("Controller Ends here");
+
+    res.status(201).json(user);
 }
 
 module.exports = registerUser;
