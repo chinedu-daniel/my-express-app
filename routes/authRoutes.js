@@ -12,6 +12,6 @@ router.post(
     registerUser
 );
 
-app.use(errorHandler);
+router.use(errorHandler);
 
 module.exports = router;
