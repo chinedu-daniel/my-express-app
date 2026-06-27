@@ -3,7 +3,7 @@ const userService = require("../services/user.services");
 function registerUser(req, res) {
     console.log("Controller starts here");
 
-    const user = userService.register(req.body);
+    const user = await userService.register(req.body);
 
     console.log("Controller Ends here");
 
