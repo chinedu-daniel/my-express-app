@@ -1,13 +1,15 @@
 const userRepository = require("../repositories/user.repository");
 
-function register(userData) {
-    const existingUser = userRepository.findByEmail(userData.email);
+async function register(userData) {
+    const existingUser = await userRepository.findByEmail(userData.email);
 
     if (existingUser) {
         throw new Error("Email already exists");
     }
 
-    return userRepository.create(userData);
+    const user = await userRepository.create(userData);
+
+    return user;
 }
 
 module.exports = {
