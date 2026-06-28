@@ -1,30 +1,23 @@
-const users = require("../data/users");
+const pool = require("../db");
 
-function findByEmail(email) {
-
-    console.log("===== REPOSITORY: findByEmail =====");
-    console.log("Email received:", email);
-
-    const foundUser = users.find(user => user.email === email);
-
-    console.log("Found user:", foundUser);
-
-    return foundUser;
+async function getAllUsers() {
+    const result = await pool.query("SELECT * FROM users");
+    return result.rows;
 }
 
-function create(userData) {
+// function create(userData) {
 
-    console.log("===== REPOSITORY: create =====");
-    console.log("User received:", userData);
+//     console.log("===== REPOSITORY: create =====");
+//     console.log("User received:", userData);
 
-    users.push(userData);
+//     users.push(userData);
 
-    console.log("Database after insert:", users);
+//     console.log("Database after insert:", users);
     
-    return userData;
-}
+//     return userData;
+// }
 
 module.exports = {
-    findByEmail,
-    create
+    getAllUsers,
+    // create
 };
