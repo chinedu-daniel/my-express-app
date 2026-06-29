@@ -1,13 +1,13 @@
 const express = require("express");
-
-const authRoutes = require("./routes/authRoutes");
-// const errorHandler = require("./middleware/error.middleware");
-
 const app = express();
+const errorMiddleware = require("./middleware/error.middleware");
 
 app.use(express.json());
 
-app.use("/users", authRoutes);
+const userRoutes = require("./routes/user.routes");
+app.use("/api", userRoutes);
+
+app.use(errorMiddleware);
 
 // app.use(errorHandler);
 
