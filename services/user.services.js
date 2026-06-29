@@ -1,15 +1,15 @@
 const userRepository = require("../repositories/user.repository");
+// const bcrypt = require("bcrypt");
+const AppError = require("../utils/appError");
 
-async function register(userData) {
-    const existingUser = await userRepository.findByEmail(userData.email);
+exports.createUser = async (data) => {
+    // const hashedPassword = await bcrypt.hash(data.password, 10);
 
-    if (existingUser) {
-        throw new Error("Email already exists");
+    if (!data.email) {
+        throw new AppError("Email is required", 409);
     }
 
-    return await userRepository.create(userData);
-}
-
-module.exports = {
-    register
+    return await userRepository.createUser(data
+        // password: hashedPassword
+    );
 };
