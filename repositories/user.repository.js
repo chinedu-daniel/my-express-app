@@ -1,23 +1,10 @@
-const pool = require("../db");
+const db = require("../db");
 
-async function getAllUsers() {
-    const result = await pool.query("SELECT * FROM users");
-    return result.rows;
-}
+exports.createUser = async (data) => {
+  const result = await db.query(
+      "INSERT INTO users (email, name) VALUES ($1, $2) RETURNING *",
+      [data.email, data.name]
+  );
 
-// function create(userData) {
-
-//     console.log("===== REPOSITORY: create =====");
-//     console.log("User received:", userData);
-
-//     users.push(userData);
-
-//     console.log("Database after insert:", users);
-    
-//     return userData;
-// }
-
-module.exports = {
-    getAllUsers,
-    // create
+  return result.rows[0];
 };
