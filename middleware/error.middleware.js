@@ -1,9 +1,9 @@
-function errorHandler(err, req, res, next) {
-    console.log("Error Middleware Executed");
+module.exports = (err, req, res, next) => {
+    console.log(err);
 
-    res.status(400).json({
-        message: err.message
+    const statusCode = err.statusCode || 500;
+
+    res.status(statusCode).json({
+        message: err.message  || "Internal Server Error"
     });
-}
-
-module.exports = errorHandler;
+};
