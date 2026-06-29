@@ -1,17 +1,19 @@
 const express = require("express");
 const router = express.Router();
 
-const registerUser = require("../controllers/user.controller");
-const validate = require("../middleware/validate");
-const registerSchema = require("../validators/register.schema");
-const errorHandler = require("../middleware/error.middleware");
+const userController = require("../controllers/user.controller");
+
+console.log("BODY:", req.body);
+// const validate = require("../middleware/validate");
+// const registerSchema = require("../validators/register.schema");
+// const errorHandler = require("../middleware/error.middleware");
 
 router.post(
-    "/register",
-    validate(registerSchema),
-    registerUser
+    "/users",
+    // validate(registerSchema),
+    userController.createUser
 );
 
-router.use(errorHandler);
+// router.use(errorHandler);
 
 module.exports = router;
