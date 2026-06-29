@@ -1,13 +1,12 @@
-const getAllUsers = require("../services/user.services");
+const userService = require("../services/user.services");
 
-async function registerUser(req, res) {
-    console.log("Controller starts here");
+exports.createUser = asyncHandler(async (req, res) => {
+  console.log("BODY:", req.body);
 
-    const user = await get.register(req.body);
+  const user = await userService.createUser(req.body);
 
-    console.log("Controller Ends here");
-
-    res.status(201).json(user);
-}
-
-module.exports = registerUser;
+  res.status(201).json({
+    message: "User created successfully",
+    data: user,
+  });
+});
