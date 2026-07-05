@@ -4,6 +4,7 @@ const router = express.Router();
 const userController = require("../controllers/user.controller");
 const validate = require("../middleware/validate");
 const { signupSchema, loginSchema } = require("../validators/user.schema");
+const protect = require("../middleware/auth.middleware");
 
 // const errorHandler = require("../middleware/error.middleware");
 
@@ -17,6 +18,12 @@ router.post(
     "/users/login",
     validate(loginSchema),
     userController.login
+);
+
+router.get(
+    "/users/profile", 
+    protect,
+    userController.getProfile
 );
 
 // router.use(errorHandler);
