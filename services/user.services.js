@@ -21,3 +21,25 @@ exports.signup = async (data) => {
 
     return newUser;
 };
+
+exports.login = async (data) => {
+    const { email, password } = data;
+
+    const user = await userRepository.findUserByEmail(email);
+
+    if (!user) {
+        throw new AppError("Invalid email or password", 401);
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+        throw new AppError("Invalid email or password", 401);
+    }
+
+    return {
+        id: user.id,
+        name: user.name,
+        email: user.email
+    };
+};
