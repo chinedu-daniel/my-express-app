@@ -1,6 +1,7 @@
 const userRepository = require("../repositories/user.repository");
 const bcrypt = require("bcrypt");
 const AppError = require("../utils/appError");
+const generateToken = require("../utils/generateToken");
 
 exports.signup = async (data) => {
     const { name, email, password } = data;
@@ -37,9 +38,24 @@ exports.login = async (data) => {
         throw new AppError("Invalid email or password", 401);
     }
 
+    const token = generateToken(user);
+
     return {
-        id: user.id,
-        name: user.name,
-        email: user.email
+        user: {
+            id: user.id,
+            name: user.name,
+            email: user.email
+        },
+        token
     };
+};
+
+exports.getProfile = async (userId) => {
+    const user = await userRepository.findUserById(userId);
+
+    if (!user) {
+        throw new AppError("User not found", 404);
+    }
+
+    return user;
 };
