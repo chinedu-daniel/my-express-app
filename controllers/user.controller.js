@@ -15,10 +15,19 @@ exports.signup = asyncHandler(async (req, res) => {
 exports.login = asyncHandler(async (req, res) => {
   console.log("BODY:", req.body);
 
-  const  user = await userService.login(req.body);
+  const result = await userService.login(req.body);
 
   res.status(200).json({
     message: "User logged in successfully",
+    data: result
+  });
+});
+
+exports.getProfile = asyncHandler(async(req, res) => {
+  const user = await userService.getProfile(req.user.id);
+
+  res.status(200).json({
+    message: "User profile fetched successfully",
     data: user
   });
 });
