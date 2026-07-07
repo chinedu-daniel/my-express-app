@@ -31,3 +31,18 @@ exports.getProfile = asyncHandler(async(req, res) => {
     data: user
   });
 });
+
+exports.logout = asyncHandler(async (req, res, next) => {
+  res.status(200).json({
+    message: "User logged out successfully"
+  });
+});
+
+exports.adminOnly = asyncHandler(async (req, res, next) => {
+  res.status(200).json({
+    message: "Welcome Admin",
+    data: {
+      user: req.user
+    }
+  });
+});
