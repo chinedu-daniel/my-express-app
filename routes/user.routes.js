@@ -3,7 +3,7 @@ const router = express.Router();
 
 const userController = require("../controllers/user.controller");
 const validate = require("../middleware/validate");
-const { signupSchema, loginSchema } = require("../validators/user.schema");
+const { signupSchema, loginSchema, updateUserSchema } = require("../validators/user.schema");
 const protect = require("../middleware/auth.middleware");
 const authorize = require("../middleware/authorize.middleware");
 
@@ -19,6 +19,11 @@ router.post(
     "/users/login",
     validate(loginSchema),
     userController.login
+);
+
+router.post(
+    "/users/refresh-token", 
+    userController.refreshToken
 );
 
 router.get(
@@ -38,6 +43,13 @@ router.get(
     protect,
     authorize("admin"),
     userController.adminOnly
+);
+
+router.patch(
+    "/users/:id", 
+    protect, 
+    validate(updateUserSchema),
+    userController.updateUser
 );
 
 // router.use(errorHandler);
