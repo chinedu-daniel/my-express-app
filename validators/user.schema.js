@@ -24,4 +24,18 @@ const loginSchema = Joi.object({
     .required()
 });
 
-module.exports = { signupSchema, loginSchema };
+const updateUserSchema = Joi.object({
+    name: Joi.string()
+    .min(3)
+    .required(),
+
+    email: Joi.string()
+    .email()
+    .required()
+});
+
+module.exports = { 
+    signupSchema, 
+    loginSchema,
+    updateUserSchema
+};
