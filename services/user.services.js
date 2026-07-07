@@ -2,6 +2,8 @@ const userRepository = require("../repositories/user.repository");
 const bcrypt = require("bcrypt");
 const AppError = require("../utils/appError");
 const generateToken = require("../utils/generateToken");
+const generateRefreshToken = require("../utils/generateRefreshToken");
+const jwt = require("jsonwebtoken");
 
 exports.signup = async (data) => {
     const { name, email, password } = data;
@@ -38,7 +40,10 @@ exports.login = async (data) => {
         throw new AppError("Invalid email or password", 401);
     }
 
-    const token = generateToken(user);
+    const accessToken = generateToken(user);
+    const refreshToken = generateRefreshToken(user);
+
+    await userRepository.saveRefreshToken(user.id, refreshToken);
 
     return {
         user: {
@@ -47,7 +52,8 @@ exports.login = async (data) => {
             email: user.email,
             role: user.role
         },
-        token
+        accessToken,
+        refreshToken
     };
 };
 
@@ -59,4 +65,55 @@ exports.getProfile = async (userId) => {
     }
 
     return user;
+};
+
+exports.updateUser = async (targetUserId, currentUser, updateData) => {
+    const isOwner = currentUser.id === Number(targetUserId);
+    const isAdmin = currentUser.role === "admin";
+
+    if (!isOwner && !isAdmin) {
+        throw new AppError("Forbidden: you cannot update this user", 403);
+    }
+
+    const existingUser = await userRepository.findUserById(targetUserId);
+
+    if (!existingUser) {
+        throw new AppError("User not found", 404);
+    }
+
+    const updatedUser = await userRepository.updateUserById(targetUserId, updateData);
+
+    return updatedUser;
+};
+
+exports.refreshAccessToken = async (refreshToken) => {
+    if (!refreshToken) {
+        throw new AppError("Refresh token is required", 401);
+    }
+
+    let decoded;
+
+    try {
+        decoded = jwt.verify(refreshToken, "my_refresh_secret_key");
+    } catch (error) {
+        throw new AppError("Invalid or expired refresh token", 401);
+    }
+
+    const storedToken = await userRepository.findRefreshToken(refreshToken);
+
+    if (!storedToken) {
+        throw new AppError("Refresh token not recognized", 401);
+    }
+
+    const user = await userRepository.findUserById(decoded.id);
+
+    if (!user) {
+        throw new AppError("User not found", 404);
+    }
+
+    const newAccessToken = generateToken(user);
+
+    return {
+        accessToken: newAccessToken
+    };
 };
