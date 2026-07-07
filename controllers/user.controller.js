@@ -46,3 +46,27 @@ exports.adminOnly = asyncHandler(async (req, res, next) => {
     }
   });
 });
+
+exports.updateUser = asyncHandler(async (req, res, next) => {
+  const updatedUser = await userService.updateUser(
+    req.params.id,
+    req.user,
+    req.body
+  );
+
+  res.status(200).json({
+    message: "User updated successfully",
+    data: updatedUser
+  });
+});
+
+exports.refreshToken = asyncHandler(async (req, res, next) => {
+  const { refreshToken } = req.body;
+
+  const result = await userService.refreshAccessToken(refreshToken);
+
+  res.status(200).json({
+    message: "Access token refreshed successfully",
+    data: result
+  });
+});
