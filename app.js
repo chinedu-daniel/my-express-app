@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+require("dotenv").config();
 const errorMiddleware = require("./middleware/error.middleware");
 
 app.use(express.json());
