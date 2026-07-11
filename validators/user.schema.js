@@ -34,8 +34,36 @@ const updateUserSchema = Joi.object({
     .required()
 });
 
+const forgotPasswordSchema = Joi.object({
+    email: Joi.string()
+    .email()
+    .required()
+});
+
+const resetPasswordSchema = Joi.object({
+    token: Joi.string().required(),
+    password: Joi.string().min(6).required()
+});
+
+const verifyEmailSchema = Joi.object({
+    token: Joi.string().required()
+});
+
+const resendVerificationSchema = Joi.object({
+    email: Joi.string().email().required()
+});
+
+const googleLoginSchema = Joi.object({
+    credential: Joi.string().required()
+});
+
 module.exports = { 
     signupSchema, 
     loginSchema,
-    updateUserSchema
+    updateUserSchema,
+    forgotPasswordSchema,
+    resetPasswordSchema,
+    verifyEmailSchema,
+    resendVerificationSchema,
+    googleLoginSchema
 };
