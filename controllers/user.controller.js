@@ -1,3 +1,4 @@
+const { message } = require("statuses");
 const userService = require("../services/user.services");
 const asyncHandler = require("../utils/asyncHandler");
 
@@ -33,8 +34,12 @@ exports.getProfile = asyncHandler(async(req, res) => {
 });
 
 exports.logout = asyncHandler(async (req, res, next) => {
+  const { refreshToken } = req.body;
+
+  const result = await userService.logout(refreshToken);
+
   res.status(200).json({
-    message: "User logged out successfully"
+    message: result.message
   });
 });
 
@@ -67,6 +72,61 @@ exports.refreshToken = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     message: "Access token refreshed successfully",
+    data: result
+  });
+});
+
+exports.forgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  const result = await userService.forgotPassword(email);
+
+  return res.status(200).json({
+    message: result.message,
+    data: result.resetUrl ? { resetUrl: result.resetUrl } : null
+  });
+});
+
+exports.resetPassword = asyncHandler(async (req, res) => {
+  const { token, password } = req.body;
+
+  const user = await userService.resetPassword(token, password);
+
+  return res.status(200).json({
+    message: "Password reset successfully",
+    data: user
+  });
+});
+
+exports.verifyEmail = asyncHandler(async (req, res) => {
+  const { token } = req.body;
+
+  const user = await userService.verifyEmail(token);
+
+  res.status(200).json({
+    message: "Email verified successfully",
+    data: user
+  });
+});
+
+exports.resendVerification = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  const result = await userService.resendVerification(email);
+
+  res.status(200).json({
+    message: "Verification email resent successfully",
+    data: result
+  });
+});
+
+exports.googleLogin = asyncHandler(async (req, res) => {
+  const { credential } = req.body;
+
+  const result = await userService.googleLogin(credential);
+
+  res.status(200).json({
+    message: "Google login successful",
     data: result
   });
 });
